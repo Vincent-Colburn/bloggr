@@ -5,7 +5,7 @@
         <div class="card-body">
           <h4 class="card-title" :contenteditable="state.editPost" @blur="editPost">
             {{ postProp.title }}
-            <img class="card-img-top" :src="postProp.imgUrl" alt="">
+            <!-- <img class="card-img-top" :src="postProp.imgUrl" alt=""> -->
             {{ postProp.body }}
           </h4>
           <i class="fa fa-pencil" aria-hidden="true" v-if="state.account.id == postProp.creatorId" @click="state.editPost = !state.editPost, editPost(e)"></i>
