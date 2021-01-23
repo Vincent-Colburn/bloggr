@@ -5,17 +5,17 @@ class CommentService {
   // async getAll() {
   //   const res = await api.get()
   // }
-  async createComment(newComment, creator, id) {
-    console.log('dis right hur is your comment creator', creator)
-    console.log('dis right hur stinky id', id)
-    console.log('this is our state user', newComment)
-    const addComment = { newComment, creator, id }
-    const res = await api.post('/comments', addComment)
+  async createComment(commentData) {
+    // console.log('dis right hur is your comment creator', creator)
+    // console.log('dis right hur stinky id', blog)
+    // console.log('this is our state user', object)
+    // const newComment = { object, creator, blog }
+    const res = await api.post('comments/', commentData)
     // const res = await api.post('blogs/', commentData, id, creator)
     console.log('this is your service getting comments', res)
     console.log('this is your resdata pushing to appst', res.data)
     AppState.comments.push(res.data)
-    return res.data.id
+    // return res.data.id
   }
 
   async editComment(commentId, postId, newBody) {

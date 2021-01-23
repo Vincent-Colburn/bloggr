@@ -23,12 +23,13 @@ class PostService {
     const res = await api.post('blogs', postData)
     AppState.posts.push(res.data)
     console.log('this is your service creating the post', res)
+    return res.data.id
   }
 
   async deletePost(postId) {
-    await api.delete('api/blogs' + postId)
-    const postInd = AppState.posts.findIndex(p => p.id === postId)
-    AppState.posts.splice(postInd, 1)
+    await api.delete('blogs/' + postId)
+    // const postInd = AppState.posts.findIndex(p => p.id === postId)
+    // AppState.posts.splice(postInd, 1)
   }
 
   async editPost(postId, newTitle) {

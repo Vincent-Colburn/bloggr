@@ -22,13 +22,14 @@
 
 <script>
 import { computed, reactive } from 'vue'
-import { logger } from '../utils/Logger'
+// import { logger } from '../utils/Logger'
 import { AppState } from '../AppState'
-import { postService } from '../services/PostService'
+// import { postService } from '../services/PostService'
 export default {
   name: 'PostComponent',
   props: {
     postProp: { type: Object, required: true }
+    // postId: { type: String, required: true }
   },
   setup(props) {
     const state = reactive({
@@ -38,21 +39,8 @@ export default {
       editComment: false
     })
     return {
-      state,
-      deletePost() {
-        try {
-          postService.deletePost(props.postProp.id)
-        } catch (error) {
-          logger.error(error)
-        }
-      },
-      editPost(e) {
-        try {
-          postService.editPost(props.postProp.id, e.target.innerText)
-        } catch (error) {
-          logger.error(error)
-        }
-      }
+      state
+
     }
   }
 }
