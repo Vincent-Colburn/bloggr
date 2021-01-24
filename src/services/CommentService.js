@@ -5,30 +5,31 @@ class CommentService {
   // async getAll() {
   //   const res = await api.get()
   // }
-  async createComment(commentData) {
-    // console.log('dis right hur is your comment creator', creator)
-    // console.log('dis right hur stinky id', blog)
-    // console.log('this is our state user', object)
-    // const newComment = { object, creator, blog }
-    const res = await api.post('comments/', commentData)
-    // const res = await api.post('blogs/', commentData, id, creator)
+  async getOne(id) {
+    const res = await api.get('comments/' + id)
+    AppState.activeComment = res.data
+  }
+
+  async createComment(newComment) {
+    console.log('this is service where newComment is', newComment)
+
+    const res = await api.post('/comments', newComment)
     console.log('this is your service getting comments', res)
     console.log('this is your resdata pushing to appst', res.data)
     AppState.comments.push(res.data)
-    // return res.data.id
   }
 
-  async editComment(commentId, postId, newBody) {
-    const commentData = { body: newBody }
-    const res = await api.put('api/blogs' + postId + 'comments' + commentId, commentData)
+  async editComment(id, editedComment) {
+    const commentData = { body: editedComment }
+    const res = await api.put('comments/' + id, commentData)
     console.log('this is your service editing the comment', res)
 
-    const commentInd = AppState.comments.findIndex(c => c.id === commentId)
+    const commentInd = AppState.comments.findIndex(c => c.id === id)
     AppState.comments.splice(commentInd, 1, res.data)
   }
 
-  async deleteComment(postId, commentId) {
-    await api.delete('api/blogs' + postId, commentId)
+  async deleteComment(commentId) {
+    await api.delete('/comments/' + commentId)
 
     const commentInd = AppState.posts.findIndex(c => c.id === commentId)
     AppState.comments.splice(commentInd, 1)

@@ -1,18 +1,20 @@
 <template>
   <div class="row d-flex ">
     <div class="col-md-11">
-      <div class="row justify-content-center align-items-center text-center">
+      <div class="row container-fluid justify-content-center align-items-center text-center">
         <p class="mx-3">
         <!-- Post by: {{ post.creator.name }} -->
         </p><h3 class="text-center justify-items-center align-items-center" :contenteditable="state.editPost" @blur="editPost">
           {{ activePost.title }}
-          <!-- {{ state.post.id }} -->
         </h3>
-        <br>
-        {{ activePost.body }}
         <i class="fa fa-pencil border mx-2" aria-hidden="true" v-if="state.account.id == state.user.id" :contenteditable="state.editPost" @click="state.editPost = !state.editPost"></i>
         <i class="fa fa-trash text-danger mx-5 border" aria-hidden="true" v-if="state.account.id == state.user.id" @click="deletePost"></i>
       </div>
+      <!-- {{ state.post.id }} -->
+      <div class="row mx-5">
+        {{ activePost.body }}
+      </div>
+      <!-- new end row div hurr -->
       <div class="row border-bottom">
         <img class="card-img-top" :src="activePost.imgUrl" alt="">
       </div>
@@ -21,30 +23,30 @@
           Join the Conversation!
         </h4>
       </div>
-      <div class="row d-flex align-items-center justify-content-center">
+      <div class="row d-flex align-items-left justify-content-left">
         <div class="col">
           <form class="form-inline border justify-content-center align-items-center" @submit.prevent="createComment">
             <div>
               <p>Comment below: </p>
               <label for="">Enter your comment here </label>
               <input
-                type="hidden"
-                name="blog"
-                value="{{state.activePost.id}}"
-                v-bind="state.newComment.blog"
-                class="form-control d-flex"
-                aria-describedby="postId"
-              />
-
-              <input
                 type="text"
                 name="body"
-                id="body"
+                id="{{state.user}}"
                 v-model="state.newComment.body"
                 placeholder="Enter you comment here..."
                 class="form-control d-flex"
                 aria-describedby="postId"
               />
+              <input
+                type="hidden"
+                name="blog"
+                id="{{state.post.id}}"
+                v-bind="state.newComment.blog"
+                class="form-control d-flex"
+                aria-describedby="postId"
+              />
+
               <input
                 type="hidden"
                 name="creator"
@@ -53,7 +55,7 @@
                 class="form-control d-flex"
                 aria-describedby="postId"
               />
-              {{ state.user }}
+              <!-- {{ state.user }} -->
               <!-- <input type="hidden" name="{{state.Blog.ObjectId}}" value="{{ state.post.id }}" />
             <input type="hidden" name="creator" value="{{ state.user }}" /> -->
               <button type="submit" class="btn btn-success">
@@ -63,9 +65,9 @@
           </form>
         </div>
       </div>
-      <div class="row d-flex align-items-center justify-content-center border">
-        <CommentComponent v-for="comment in comments" :key="comment.id" :comment-prop="comment" />
-      </div>
+      <!-- <div class="row d-flex align-items-center justify-content-center border"> -->
+      <CommentComponent v-for="comment in comments" :key="comment.id" :comment-prop="comment" />
+      <!-- </div> -->
     </div>
   </div>
 </template>
@@ -82,18 +84,19 @@ export default {
   props: {
     // postProp: { type: Object, required: false },
     commentProp: { type: Object, required: true },
-    creator: { type: String, required: true },
-    blog: { type: Object, ref: 'Blog', required: true },
+    creator: { type: Object, required: true },
+    blog: { type: String, ref: 'Blog', required: true }
     // postId: { type: String, required: true }
-    body: { type: String, required: true }
+    // body: { type: String, required: true }
   },
   setup() {
     const router = useRoute()
     const state = reactive({
-      newComment: {},
       account: computed(() => AppState.account),
-      // post: computed(() => AppState.activePost),
-      user: computed(() => AppState.user)
+      activePost: computed(() => AppState.activePost),
+      post: computed(() => AppState.activePost),
+      user: computed(() => AppState.user),
+      newComment: {}
     })
 
     onMounted(async() => {
@@ -110,16 +113,24 @@ export default {
       comments: computed(() => AppState.comments),
       activePost: computed(() => AppState.activePost),
       user: computed(() => AppState.user),
-      async createComment() {
+      async createComment(body) {
         try {
-          console.log('this the post hopefully', state.newComment)
+          // const blog = AppState.activePost
+          // console.log('this is hopefully your new commetn', state.user)
+          const body = state.newComment.body
+          const creator = state.user
+          const blog = state.activePost
+          const addedComment = { creator, blog, body }
+
+          await commentService.createComment(addedComment)
+
+          // this is basically garbage
           // const blog = state.post._id
-          // const creator = state.user
+          // const creatorId = state.user
           // const object = state.newComment
           // const newData = { object, creator, blog }
           // console.log('this is your acct', newData)
           // console.log('this is your new creator', state.account.sub)
-          await commentService.createComment(state.newComment)
           // state.newComment = {}
           // const body =
           // let newerComment = { id, creator, state.newComment}

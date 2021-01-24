@@ -1,15 +1,16 @@
 <template>
-  <div class="row">
+  <div class="row mx-3">
     <div class="CommentComponent">
       <div class="card">
+        <h4 class="card-title" :contenteditable="state.editComment" @blur="editComment">
+          {{ commentProp.creator.name }} :
+        </h4>
         <div class="card-body">
-          <div class="card-body">
-            <h4 class="card-title" :contenteditable="state.editComment" @blur="editComment">
-              {{ commentProp.creator.name }}
-              {{ commentProp.body }}
-            </h4>
-            <i class="fa fa-pencil" aria-hidden="true" v-if="state.account.id == commentProp.creatorId" @click="state.editComment = !state.editComment, editComment(e)"></i>
-            <i class="fa fa-trash" aria-hidden="true" v-if="state.account.id == commentProp.creatorId" @click="deleteComment"></i>
+          <div class="card-body" :contenteditable="state.editComment" @blur="editComment">
+            {{ commentProp.body }}
+            <!-- id maybe? {{ commentProp.id }} -->
+            <i class="fa fa-pencil mx-3" aria-hidden="true" v-if="state.account.id == state.user" @click="state.editComment = !state.editComment, editComment(e)"></i>
+            <i class="fa fa-trash mx-3 " aria-hidden="true" v-if="state.account.id == state.user" @click="deleteComment"></i>
           </div>
         </div>
       </div>
@@ -26,7 +27,10 @@ export default {
   name: 'CommentComponent',
   props: {
     commentProp: { type: Object, required: true },
-    postId: { type: String, required: true }
+    postId: { type: String, required: true },
+    creator: { type: Object, required: true },
+    body: { type: Object, required: true },
+    blog: { type: Object, ref: 'Blog', required: true }
   },
   setup(props) {
     const state = reactive({
@@ -37,14 +41,17 @@ export default {
       state,
       deleteComment() {
         try {
-          commentService.deleteComment(props.commentProp.id)
+          const id = props.commentProp.id
+          commentService.deleteComment(id)
         } catch (error) {
           logger.error(error)
         }
       },
       editComment(e) {
         try {
-          commentService.editcomment(props.postProp.id, props.commentProp.id, e.target.innerText)
+          const editedComment = e.target.innerText
+          console.log('look right here for comment edit', editedComment)
+          commentService.editComment(props.commentProp.id, editedComment)
         } catch (error) {
           logger.error(error)
         }

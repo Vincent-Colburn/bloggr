@@ -16,8 +16,7 @@ const routes = [
     path: '/blogs/:id',
     name: 'PostsDetails',
     component: PostsDetailsPage
-  },
-  {
+  }, {
     path: '/about',
     name: 'About',
     component: loadPage('AboutPage')
