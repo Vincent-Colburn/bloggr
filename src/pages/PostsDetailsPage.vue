@@ -11,8 +11,9 @@
         <i class="fa fa-trash text-danger mx-5 border" aria-hidden="true" v-if="state.account.id == state.user.id" @click="deletePost"></i>
       </div>
       <!-- {{ state.post.id }} -->
-      <div class="row mx-5">
+      <div class="row mx-5" :contenteditable="state.editBody" @blur="editBody">
         {{ activePost.body }}
+        <i class="fa fa-pencil border mx-2" aria-hidden="true" v-if="state.account.id == state.user.id" :contenteditable="state.editBody" @click="state.editBody = !state.editBody"></i>
       </div>
       <!-- new end row div hurr -->
       <div class="row border-bottom">
@@ -141,6 +142,7 @@ export default {
       },
       deletePost() {
         try {
+          console.log
           postService.deletePost(state.post.id)
         } catch (error) {
           logger.error(error)
@@ -152,7 +154,15 @@ export default {
         } catch (error) {
           logger.error(error)
         }
+      },
+      editBody(e) {
+        try {
+          postService.editBody(state.post.id, e.target.innerText)
+        } catch (error) {
+          logger.error(error)
+        }
       }
+
     }
   }
 }

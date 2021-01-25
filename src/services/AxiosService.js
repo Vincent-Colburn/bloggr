@@ -1,6 +1,6 @@
 import Axios from 'axios'
 
-const baseURL = 'https://bcw-sandbox.herokuapp.com/api/'
+const baseURL = 'https://bcw-sandbox.herokuapp.com/api'
 export const api = Axios.create({
   baseURL,
   timeout: 8000
