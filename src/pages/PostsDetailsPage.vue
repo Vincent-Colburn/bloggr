@@ -142,7 +142,6 @@ export default {
       },
       deletePost() {
         try {
-          console.log
           postService.deletePost(state.post.id)
         } catch (error) {
           logger.error(error)
